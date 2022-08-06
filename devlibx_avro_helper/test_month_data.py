@@ -1,6 +1,6 @@
 import unittest
 
-from avro_helper.month_data import MonthDataAvroHelper
+from devlibx_avro_helper.month_data import MonthDataAvroHelper
 
 
 class TestingMonthDataAvroHelper(unittest.TestCase):
