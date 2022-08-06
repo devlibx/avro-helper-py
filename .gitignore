@@ -1,0 +1,4 @@
+venv
+.idea
+dist
+avro_helper_devlibx.egg-info
