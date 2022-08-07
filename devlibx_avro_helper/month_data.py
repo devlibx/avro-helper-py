@@ -20,7 +20,24 @@ month_data_schema = '''
     },
     {
       "name": "entity_id",
-      "type": "string"
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null
+    },
+    {
+      "name": "sub_entity_id",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null
+    },
+    {
+      "name": "version",
+      "type": "int",
+      "default": 1
     }
   ]
 }
