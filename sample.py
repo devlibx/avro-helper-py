@@ -1,8 +1,6 @@
 from devlibx_avro_helper.month_data import MonthDataAvroHelper
 
-input = "PAg4LTE23AEIOC0xN94BCDgtMTTYAQg4LTE12gEIOC0xOOABCDgtMTniAQg4LTMw" \
-        "+AEIOC0zMfoBCDgtMTLUAQg4LTEz1gEIOC0xMNABCDgtMTHSAQY5LTH8AQY5LTL" \
-        "+AQY5LTOAAgg4LTI38gEGOS00ggIGOC02yAEIOC0yOPQBBjgtN8oBCDgtMjXuAQY4LTjMAQg4LTI28AEGOC05zgEIOC0yOfYBCDgtMjDkAQg4LTIz6gEIOC0yNOwBCDgtMjHmAQg4LTIy6AEAEGhhcmlzaF8x "
+base64Str = "BgY3LTMCBjYtNgIGNy01BAAAAAI="
 helper = MonthDataAvroHelper()
-result = helper.process(input)
+result = helper.process(base64Str)
 print(result)
