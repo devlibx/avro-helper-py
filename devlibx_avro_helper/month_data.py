@@ -255,3 +255,25 @@ class MonthDataAvroHelper:
         :return: Array containing N items (N = days) OR aggregated sum if aggregate=true
         """
         return self.process_and_return_aggregation_for_week(datetime.now(), avro_base64_str, aggregate)
+
+    def process_and_return_for_day(self, time, avro_base64_str):
+        """
+        Return data for day given by time (including today)
+
+        :param str avro_base64_str: Base64 data of month data
+        :return: return data for today
+        """
+        data = self.process(avro_base64_str)
+        try:
+            return data["days"]["{}-{}".format(time.month, time.day)]
+        except KeyError as error:
+            return 0
+
+    def process_and_return_for_today(self, avro_base64_str):
+        """
+        Return data for day given by time (including today)
+
+        :param str avro_base64_str: Base64 data of month data
+        :return: return data for today
+        """
+        return self.process_and_return_for_day(datetime.now(), avro_base64_str)
