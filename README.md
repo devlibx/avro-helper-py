@@ -41,3 +41,27 @@ def test_process_and_return_aggregation_for_month(self):
     self.assertEqual(9, result, "result should be 9")
     # Output = 9
 ```
+
+### Get data for this week (last 7 days)
+```python
+from devlibx_avro_helper.month_data import MonthDataAvroHelper
+from datetime import datetime
+
+
+def test_process_and_return_aggregation_for_week(self):
+    # Test 1 - data from generateDataFor_test_parsing_Test_2
+    base64Str = "Ag4INi0yOQIGNy0xAgY3LTICCDYtMzACBjctMwIGNy00AgY3LTUKAAAAAAI=="
+    helper = MonthDataAvroHelper()
+    result = helper.process(base64Str)
+    print(result)
+    # Output = {'days': {'6-29': 1, '7-1': 1, '7-2': 1, '6-30': 1, '7-3': 1, '7-4': 1, '7-5': 5}, 'days_str': None, 'entity_id': None, 'sub_entity_id': None, 'version': 1}
+
+    date_time_str = '05/07/22 01:55:19'
+    date_time_obj = datetime.strptime(date_time_str, '%d/%m/%y %H:%M:%S')
+
+    # if you are looking for data for this month then use can use
+    # helper.process_and_return_aggregation_for_this_month(base64Str)
+    result = helper.process_and_return_aggregation_for_week(date_time_obj, base64Str)
+    self.assertEqual(11, result, "result should be 9")
+    # Output = 11
+```

@@ -161,6 +161,29 @@ class MonthDataAvroHelper:
         """
         return self.get_keys_for_month(datetime.now())
 
+    def get_keys_for_week(self, time):
+        """
+        Give key month given by time - you can use these keys to get data from avro data
+
+        :param time: month to use
+        :return: array containing keys for this month (including given time)
+        """
+        result = []
+        end = time
+        start = time - timedelta(days=6)
+        while start <= end:
+            result.append("{}-{}".format(start.month, start.day))
+            start = start + timedelta(days=1)
+        return result
+
+    def get_keys_for_this_week(self):
+        """
+        Give key month this month
+
+        :return: array containing keys for this month (including given time)
+        """
+        return self.get_keys_for_week(datetime.now())
+
     def process_and_return_aggregation_for_month(self, time, avro_base64_str, aggregate=True):
         """
         Return data for month given by time (including today)
@@ -196,3 +219,39 @@ class MonthDataAvroHelper:
         :return: Array containing N items (N = days) OR aggregated sum if aggregate=true
         """
         return self.process_and_return_aggregation_for_month(datetime.now(), avro_base64_str, aggregate)
+
+    def process_and_return_aggregation_for_week(self, time, avro_base64_str, aggregate=True):
+        """
+        Return data for week given by time (including today)
+
+        :param datetime time: Time from where we need to calculate N days
+        :param str avro_base64_str: Base64 data of month data
+        :param aggregate if true add and return sum, otherwise array
+        :return: Array containing N items (N = days) OR aggregated sum if aggregate=true
+        """
+
+        data = self.process(avro_base64_str)
+        days_to_add = self.get_keys_for_week(time)
+        result = []
+        for day in days_to_add:
+            try:
+                result.append(data["days"][day])
+            except KeyError as error:
+                pass
+        if aggregate is False:
+            return result
+        else:
+            sum = 0
+            for i in result:
+                sum = sum + i
+            return sum
+
+    def process_and_return_aggregation_for_this_week(self, avro_base64_str, aggregate=True):
+        """
+        Return data for this week (including today)
+
+        :param str avro_base64_str: Base64 data of month data
+        :param aggregate if true add and return sum, otherwise array
+        :return: Array containing N items (N = days) OR aggregated sum if aggregate=true
+        """
+        return self.process_and_return_aggregation_for_week(datetime.now(), avro_base64_str, aggregate)
