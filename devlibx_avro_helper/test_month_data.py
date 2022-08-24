@@ -36,26 +36,26 @@ class TestingMonthDataAvroHelper(unittest.TestCase):
 
     def test_parsing(self):
         # Test 1 - from generateDataFor_test_parsing_Test_1
-        base64Str = "AgIGNy01BAAAAAAC"
+        base64Str = "AAICBjctNQIEAAAAAAAAAAAAAAI="
         helper = MonthDataAvroHelper()
         result = helper.process(base64Str)
         print(result)
-        self.assertEqual(2, result["days"]["7-5"], "It should be 2")
+        self.assertEqual(2, result["data"]["7-5"]["counter"], "It should be 2")
 
         # Test 2 - data from generateDataFor_test_parsing_Test_2
-        base64Str = "Ag4INi0yOQIGNy0xAgY3LTICCDYtMzACBjctMwIGNy00AgY3LTUKAAAAAAI=="
+        base64Str = "AAIOCDYtMjkCAgAAAAAAAAAAAAY3LTECAgAAAAAAAAAAAAY3LTICAgAAAAAAAAAAAAg2LTMwAgIAAAAAAAAAAAAGNy0zAgIAAAAAAAAAAAAGNy00AgIAAAAAAAAAAAAGNy01AgoAAAAAAAAAAAAAAg=="
         result = helper.process(base64Str)
         print(result)
-        self.assertEqual(1, result["days"]["7-1"], "It should be 1")
-        self.assertEqual(1, result["days"]["7-2"], "It should be 1")
-        self.assertEqual(1, result["days"]["7-3"], "It should be 1")
-        self.assertEqual(1, result["days"]["7-1"], "It should be 1")
-        self.assertEqual(5, result["days"]["7-5"], "It should be 1")
-        self.assertEqual(7, len(result["days"]), "It should be 5")
+        self.assertEqual(1, result["data"]["7-1"]["counter"], "It should be 1")
+        self.assertEqual(1, result["data"]["7-2"]["counter"], "It should be 1")
+        self.assertEqual(1, result["data"]["7-3"]["counter"], "It should be 1")
+        self.assertEqual(1, result["data"]["7-1"]["counter"], "It should be 1")
+        self.assertEqual(5, result["data"]["7-5"]["counter"], "It should be 1")
+        self.assertEqual(7, len(result["data"]), "It should be 7")
 
     def test_process_and_return_aggregation_for_month(self):
         # Test 1 - data from generateDataFor_test_parsing_Test_2
-        base64Str = "Ag4INi0yOQIGNy0xAgY3LTICCDYtMzACBjctMwIGNy00AgY3LTUKAAAAAAI=="
+        base64Str = "AAIOCDYtMjkCAgAAAAAAAAAAAAY3LTECAgAAAAAAAAAAAAY3LTICAgAAAAAAAAAAAAg2LTMwAgIAAAAAAAAAAAAGNy0zAgIAAAAAAAAAAAAGNy00AgIAAAAAAAAAAAAGNy01AgoAAAAAAAAAAAAAAg=="
         helper = MonthDataAvroHelper()
         result = helper.process(base64Str)
         print(result)
@@ -72,7 +72,7 @@ class TestingMonthDataAvroHelper(unittest.TestCase):
 
     def test_process_and_return_aggregation_for_week(self):
         # Test 1 - data from generateDataFor_test_parsing_Test_2
-        base64Str = "Ag4INi0yOQIGNy0xAgY3LTICCDYtMzACBjctMwIGNy00AgY3LTUKAAAAAAI=="
+        base64Str = "AAIOCDYtMjkCAgAAAAAAAAAAAAY3LTECAgAAAAAAAAAAAAY3LTICAgAAAAAAAAAAAAg2LTMwAgIAAAAAAAAAAAAGNy0zAgIAAAAAAAAAAAAGNy00AgIAAAAAAAAAAAAGNy01AgoAAAAAAAAAAAAAAg=="
         helper = MonthDataAvroHelper()
         result = helper.process(base64Str)
         print(result)
@@ -89,7 +89,7 @@ class TestingMonthDataAvroHelper(unittest.TestCase):
 
     def test_process_and_return_for_day(self):
         # Test 1 - data from generateDataFor_test_parsing_Test_2
-        base64Str = "Ag4INi0yOQIGNy0xAgY3LTICCDYtMzACBjctMwIGNy00AgY3LTUKAAAAAAI=="
+        base64Str = "AAIOCDYtMjkCAgAAAAAAAAAAAAY3LTECAgAAAAAAAAAAAAY3LTICAgAAAAAAAAAAAAg2LTMwAgIAAAAAAAAAAAAGNy0zAgIAAAAAAAAAAAAGNy00AgIAAAAAAAAAAAAGNy01AgoAAAAAAAAAAAAAAg=="
         helper = MonthDataAvroHelper()
         result = helper.process(base64Str)
         print(result)

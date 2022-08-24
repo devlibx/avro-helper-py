@@ -5,48 +5,124 @@ import base64
 from datetime import datetime
 from datetime import timedelta
 
-month_data_schema = '''
+schema_string = '''
 {
   "namespace": "io.gitbub.devlibx.avro",
   "type": "record",
   "name": "MonthDataAvro",
   "fields": [
     {
-      "name": "days",
+      "name": "ParentContainer",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "namespace": "io.gitbub.devlibx.avro.child",
+          "name": "Container",
+          "fields": [
+            {
+              "name": "counter",
+              "type": [
+                "null",
+                "int"
+              ],
+              "default": null
+            },
+            {
+              "name": "aggregate",
+              "type": [
+                "null",
+                "double"
+              ],
+              "default": null
+            },
+            {
+              "name": "counter_secondary",
+              "type": [
+                "null",
+                "int"
+              ],
+              "default": null
+            },
+            {
+              "name": "aggregate_secondary",
+              "type": [
+                "null",
+                "double"
+              ],
+              "default": null
+            },
+            {
+              "name": "str",
+              "type": [
+                "null",
+                "string"
+              ],
+              "default": null
+            },
+            {
+              "name": "udf1",
+              "type": [
+                "null",
+                "string",
+                "int",
+                "double"
+              ],
+              "default": null
+            },
+            {
+              "name": "udf2",
+              "type": [
+                "null",
+                "string",
+                "int",
+                "double"
+              ],
+              "default": null
+            },
+            {
+              "name": "udf3",
+              "type": [
+                "null",
+                "string",
+                "int",
+                "double"
+              ],
+              "default": null
+            },
+            {
+              "name": "udf4",
+              "type": [
+                "null",
+                "string",
+                "int",
+                "double"
+              ],
+              "default": null
+            },
+            {
+              "name": "udf5",
+              "type": [
+                "null",
+                "string",
+                "int",
+                "double"
+              ],
+              "default": null
+            }
+          ]
+        }
+      },
+      "default": []
+    },
+    {
+      "name": "data",
       "type": [
         "null",
         {
           "type": "map",
-          "values": "int"
+          "values": "io.gitbub.devlibx.avro.child.Container"
         }
-      ],
-      "default": null
-    },
-    {
-      "name": "days_str",
-      "type": [
-        "null",
-        {
-          "type": "map",
-          "values": "string"
-        }
-      ],
-      "default": null,
-      "doc": "map of days data as string"
-    },
-    {
-      "name": "entity_id",
-      "type": [
-        "null",
-        "string"
-      ],
-      "default": null
-    },
-    {
-      "name": "sub_entity_id",
-      "type": [
-        "null",
-        "string"
       ],
       "default": null
     },
@@ -59,7 +135,7 @@ month_data_schema = '''
 }
 '''
 
-month_data_schema_parsed = avro.schema.parse(month_data_schema)
+month_data_schema_parsed = avro.schema.parse(schema_string)
 
 
 # This class helps to read avro object from given Base64 string
@@ -77,7 +153,7 @@ class MonthDataAvroHelper:
         """
         bytes_reader = io.BytesIO(base64.b64decode(avro_base64_str))
         decoder = avro.io.BinaryDecoder(bytes_reader)
-        reader = avro.io.DatumReader(month_data_schema_parsed)
+        reader = avro.io.DatumReader(month_data_schema_parsed, month_data_schema_parsed)
         return reader.read(decoder)
 
     def process_and_return_last_n_days_from_time(self, time, avro_base64_str, days):
@@ -199,7 +275,7 @@ class MonthDataAvroHelper:
         result = []
         for day in days_to_add:
             try:
-                result.append(data["days"][day])
+                result.append(data["data"][day]["counter"])
             except KeyError as error:
                 pass
         if aggregate is False:
@@ -235,7 +311,7 @@ class MonthDataAvroHelper:
         result = []
         for day in days_to_add:
             try:
-                result.append(data["days"][day])
+                result.append(data["data"][day]["counter"])
             except KeyError as error:
                 pass
         if aggregate is False:
@@ -265,7 +341,7 @@ class MonthDataAvroHelper:
         """
         data = self.process(avro_base64_str)
         try:
-            return data["days"]["{}-{}".format(time.month, time.day)]
+            return data["data"]["{}-{}".format(time.month, time.day)]["counter"]
         except KeyError as error:
             return 0
 

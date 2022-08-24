@@ -18,7 +18,7 @@ description = 'Python DSL for setting up Flask app CDC'
 
 setuptools.setup(
     name='avro-helper-devlibx',
-    version="0.0.10",
+    version="0.0.12",
     description='{0}\n\n{1}'.format(description, history),
     long_description_content_type="text/markdown",
     long_description=open("README.md").read(),
@@ -28,5 +28,5 @@ setuptools.setup(
     packages=['devlibx_avro_helper'],
     package_dir={"": "."},
     license='MIT',
-    install_requires=[ "avro"]
+    install_requires=["avro"]
 )
