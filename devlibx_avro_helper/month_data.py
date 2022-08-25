@@ -167,7 +167,6 @@ class MonthDataAvroHelper:
         """
 
         data = self.process(avro_base64_str)
-        print(data)
         days_to_add = self.get_last_n_days_keys(time, days)
         result = []
         for day in days_to_add:
