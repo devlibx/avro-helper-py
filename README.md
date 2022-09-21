@@ -2,12 +2,29 @@
 
 Install ```pip install avro-helper-devlibx```
 
-#### Quick example - V1
+# Quick example - V1
+
+### Debug what data I have
+
+```python
+from devlibx_avro_helper.month_data_v1 import MonthDataAvroHelperV1
+
+input = '''{"updated_at":1663665518937,"days":{"9-17":1,"9-4":1,"9-18":1,"9-5":1,"9-15":1,"9-6":1,"9-16":1}}'''
+helper = MonthDataAvroHelperV1(input)
+helper.dump_to_debug()
+
+# Print the data
+# -------------------------------------- Start: Data --------------------------------------------------
+# Day Aggregations
+# {'9-17': 1, '9-4': 1, '9-18': 1, '9-5': 1, '9-15': 1, '9-6': 1, '9-16': 1}
+# -------------------------------------- End: Data ----------------------------------------------------
+```
 
 ### Get data for this month (from today to start of this month)
 
 ```python
 from devlibx_avro_helper.month_data_v1 import MonthDataAvroHelperV1
+
 
 def test__get_current_month_numeric_aggregation_from_now_for_readme(self):
     # This is the data you will get from DB or some other place
@@ -23,6 +40,29 @@ def test__get_current_month_numeric_aggregation_from_now_for_readme(self):
 
     self.assertEqual(8, result)
 ```
+
+### Get data for last N days (from today to last n days - including today)
+
+```python
+from devlibx_avro_helper.month_data_v1 import MonthDataAvroHelperV1
+from datetime import datetime
+
+
+def test__get_last_n_days_numeric_aggregation_from_given_time(self):
+    # This is the data you will get from DB or some other place
+    inputDataFromDB = '''
+                      {"updated_at":1663665518937,"days":{"9-1":3,"9-2":2,"9-3":7, "9-4":3, "9-5":11}}
+                      '''
+    helper = MonthDataAvroHelperV1(inputDataFromDB)
+
+    # Check with aggregate=True
+    result = helper.get_last_n_days_numeric_aggregation_from_given_time(datetime.now(), 4)
+    print(result)
+    # >> 23
+    self.assertEqual(23, result)
+```
+
+---
 
 #### Quick example
 
