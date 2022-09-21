@@ -83,6 +83,14 @@ class TestingMonthDataAvroHelper(unittest.TestCase):
         self.assertAlmostEqual(29.9, result, delta=0.0001, msg="result should be 29.9")
         # Output = 29.9
 
+        result = helper.process_and_return_aggregation_for_n_days(date_time_obj, base64Str, 7, aggregate=False,
+                                                                  field="aggregate")
+        print("process_and_return_aggregation_for_n_days: result not aggregated", result)
+        result = helper.process_and_return_aggregation_for_n_days(date_time_obj, base64Str, 7, aggregate=True,
+                                                                  field="aggregate")
+        print("process_and_return_aggregation_for_n_days: result aggregated", result)
+        self.assertAlmostEqual(33.3, result, delta=0.0001, msg="result should be 33.3")
+
     def test_process_and_return_aggregation_for_week(self):
         # Test 1 - data from generateDataFor_test_parsing_Test_2
         base64Str = "AAIOCDYtMjkCAgAAAAAAAAAAAAY3LTECAgAAAAAAAAAAAAY3LTICAgAAAAAAAAAAAAg2LTMwAgIAAAAAAAAAAAAGNy0zAgIAAAAAAAAAAAAGNy00AgIAAAAAAAAAAAAGNy01AgoAAAAAAAAAAAAAAg=="

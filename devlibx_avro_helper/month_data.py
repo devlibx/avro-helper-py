@@ -360,7 +360,8 @@ class MonthDataAvroHelper:
         """
         return self.process_and_return_for_day(datetime.now(), avro_base64_str, field)
 
-    def process_and_return_string_data_for_month(self, time, avro_base64_str, aggregate=True, union=True, separator=";", field="str"):
+    def process_and_return_string_data_for_month(self, time, avro_base64_str, aggregate=True, union=True, separator=";",
+                                                 field="str"):
         """
         Return data for month given by time (including today)
 
@@ -395,7 +396,8 @@ class MonthDataAvroHelper:
         else:
             return list(final_set)
 
-    def process_and_return_string_data_for_this_month(self, avro_base64_str, aggregate=True, union=True, separator=";", field="str"):
+    def process_and_return_string_data_for_this_month(self, avro_base64_str, aggregate=True, union=True, separator=";",
+                                                      field="str"):
         """
         Return data for this month (including today)
 
@@ -406,9 +408,11 @@ class MonthDataAvroHelper:
         :param field: if passed perform result on that field default value is str
         :return: Array containing N items (N = days) OR count if aggregate=true
         """
-        return self.process_and_return_aggregation_for_month(datetime.now(), avro_base64_str, aggregate, union, separator, field)
+        return self.process_and_return_aggregation_for_month(datetime.now(), avro_base64_str, aggregate, union,
+                                                             separator, field)
 
-    def process_and_return_string_data_for_week(self, time, avro_base64_str, aggregate=True, union=True, separator=";", field="str"):
+    def process_and_return_string_data_for_week(self, time, avro_base64_str, aggregate=True, union=True, separator=";",
+                                                field="str"):
         """
         Return data for week given by time (including today)
 
@@ -443,7 +447,8 @@ class MonthDataAvroHelper:
         else:
             return list(final_set)
 
-    def process_and_return_string_data_for_this_week(self, avro_base64_str, aggregate=True, union=True, separator=";", field="str"):
+    def process_and_return_string_data_for_this_week(self, avro_base64_str, aggregate=True, union=True, separator=";",
+                                                     field="str"):
         """
         Return data for this week (including today)
 
@@ -454,7 +459,8 @@ class MonthDataAvroHelper:
         :param field: if passed perform result on that field default value is str
         :return: Array containing N items (N = days) OR count if aggregate=true
         """
-        return self.process_and_return_aggregation_for_week(datetime.now(), avro_base64_str, aggregate, union, separator, field)
+        return self.process_and_return_aggregation_for_week(datetime.now(), avro_base64_str, aggregate, union,
+                                                            separator, field)
 
     def process_and_return_string_data_for_day(self, time, avro_base64_str, aggregate=True, separator=";", field="str"):
         """
@@ -492,3 +498,30 @@ class MonthDataAvroHelper:
         :return: return data for today
         """
         return self.process_and_return_for_day(datetime.now(), avro_base64_str, aggregate, separator, field)
+
+    def process_and_return_aggregation_for_n_days(self, time, avro_base64_str, days, aggregate=True, field="counter"):
+        """
+        Return data for last N days given by time (including today) - for field (default=counter)
+
+        :param days: No of days
+        :param datetime time: Time from where we need to calculate N days
+        :param str avro_base64_str: Base64 data of month data
+        :param aggregate if true add and return sum, otherwise array
+        :param field if passed perform aggregation on that field default value is counter
+        :return: Array containing N items (N = days) OR aggregated sum if aggregate=true
+        """
+        data = self.process(avro_base64_str)
+        days_to_add = self.get_last_n_days_keys(time, days)
+        result = []
+        for day in days_to_add:
+            try:
+                result.append(data["data"][day][field])
+            except KeyError as error:
+                pass
+        if aggregate is False:
+            return result
+        else:
+            sum = 0
+            for i in result:
+                sum = sum + i
+            return sum
