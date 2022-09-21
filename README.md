@@ -2,6 +2,28 @@
 
 Install ```pip install avro-helper-devlibx```
 
+#### Quick example - V1
+
+### Get data for this month (from today to start of this month)
+
+```python
+from devlibx_avro_helper.month_data_v1 import MonthDataAvroHelperV1
+
+def test__get_current_month_numeric_aggregation_from_now_for_readme(self):
+    # This is the data you will get from DB or some other place
+    inputDataFromDB = '''
+                  {"updated_at":1663665518937,"days":{"9-1":3,"9-2":1,"9-3":2, "9-4":1, "9-5":1}}
+                  '''
+    helper = MonthDataAvroHelperV1(inputDataFromDB)
+
+    # Check with aggregate=True
+    result = helper.get_current_month_numeric_aggregation_from_now()
+    print(result)
+    # >> 8
+
+    self.assertEqual(8, result)
+```
+
 #### Quick example
 
 ```python
@@ -93,9 +115,11 @@ def test_process_and_return_for_day(self):
 ```
 
 ### Get string data for this month
+
 ```python
 from devlibx_avro_helper.month_data import MonthDataAvroHelper
 from datetime import datetime
+
 
 def test_process_and_return_string_data_for_month(self):
     # Test 1 - data from generateDataFor_test_parsing_Test_2
@@ -123,9 +147,11 @@ def test_process_and_return_string_data_for_month(self):
 ```
 
 ### Get string data for this week
+
 ```python
 from devlibx_avro_helper.month_data import MonthDataAvroHelper
 from datetime import datetime
+
 
 def test_process_and_return_string_data_for_week(self):
     # Test 1 - data from generateDataFor_test_parsing_Test_2
@@ -147,9 +173,11 @@ def test_process_and_return_string_data_for_week(self):
 ```
 
 ### Get string data for the day
+
 ```python
 from devlibx_avro_helper.month_data import MonthDataAvroHelper
 from datetime import datetime
+
 
 def test_process_and_return_string_data_for_day(self):
     # Test 1 - data from generateDataFor_test_parsing_Test_2
