@@ -3,6 +3,36 @@ from datetime import datetime
 from datetime import timedelta
 
 
+def get_keys_for_current_week_for_day_aggregation_from_given_time(time):
+    """
+    Give key week given by time - which are then used to aggregate data
+    :param time: week to use
+    :return: array containing keys for this week (including given time)
+    """
+    result = []
+    end = time
+    start = time.replace(minute=0, hour=0, second=0, microsecond=0) - timedelta(days=time.weekday())
+    while start <= end:
+        result.append("{}-{}".format(start.month, start.day))
+        start = start + timedelta(days=1)
+    return result
+
+
+def get_keys_for_current_two_week_for_day_aggregation_from_given_time(time):
+    """
+    Give key week given by time - which are then used to aggregate data
+    :param time: week to use
+    :return: array containing keys for this week (plus last week) (including given time)
+    """
+    result = []
+    end = time
+    start = time.replace(minute=0, hour=0, second=0, microsecond=0) - timedelta(days=time.weekday()+7)
+    while start <= end:
+        result.append("{}-{}".format(start.month, start.day))
+        start = start + timedelta(days=1)
+    return result
+
+
 def get_keys_for_current_month_for_day_aggregation_from_given_time(time):
     """
     Give key month given by time - which are then used to aggregate data
@@ -94,6 +124,92 @@ class MonthDataAvroHelperV1:
             print(self.minutes)
 
         print("-------------------------------------- End: Data ----------------------------------------------------")
+
+    def get_current_week_numeric_aggregation_from_given_time(self, time, aggregate=True, aggregation_key="days"):
+        """
+        This method will give you data for current week.
+
+        :param aggregation_key:  days, days_hour [currently only days is supported]
+        :param time: from [start of this week <--> the time given]
+        :param aggregate: aggregation or raw values
+        :return: if aggregate=True, then single numeric value of the total, otherwise array of values
+        """
+
+        # Find the keys
+        keys = get_keys_for_current_week_for_day_aggregation_from_given_time(time)
+        print(keys)
+
+        # Find data with all keys
+        result = []
+        for day in keys:
+            try:
+                if aggregation_key == "days":
+                    result.append(self.days[day])
+            except KeyError as error:
+                pass
+
+        # Give raw result or aggregated value
+        if aggregate is False:
+            return result
+        else:
+            sum = 0
+            for i in result:
+                sum = sum + i
+            return sum
+
+    def get_current_week_numeric_aggregation_from_now(self, aggregate=True, aggregation_key="days"):
+        """
+        This method will give you data for current week.
+
+        :param aggregation_key:  days, days_hour [currently only days is supported]
+        :param aggregate: aggregation or raw values
+        :return: if aggregate=True, then single numeric value of the total, otherwise array of values
+        """
+
+        return self.get_current_week_numeric_aggregation_from_given_time(datetime.now(), aggregate, aggregation_key)
+
+    def get_current_two_week_numeric_aggregation_from_given_time(self, time, aggregate=True, aggregation_key="days"):
+        """
+        This method will give you data for current week plus the last week.
+
+        :param aggregation_key:  days, days_hour [currently only days is supported]
+        :param time: from [start of last week <--> the time given]
+        :param aggregate: aggregation or raw values
+        :return: if aggregate=True, then single numeric value of the total, otherwise array of values
+        """
+
+        # Find the keys
+        keys = get_keys_for_current_two_week_for_day_aggregation_from_given_time(time)
+
+        # Find data with all keys
+        result = []
+        for day in keys:
+            try:
+                if aggregation_key == "days":
+                    result.append(self.days[day])
+            except KeyError as error:
+                pass
+
+        # Give raw result or aggregated value
+        if aggregate is False:
+            return result
+        else:
+            sum = 0
+            for i in result:
+                sum = sum + i
+            return sum
+
+    def get_current_two_week_numeric_aggregation_from_now(self, aggregate=True, aggregation_key="days"):
+        """
+        This method will give you data for current week plus last week.
+
+        :param aggregation_key:  days, days_hour [currently only days is supported]
+        :param aggregate: aggregation or raw values
+        :return: if aggregate=True, then single numeric value of the total, otherwise array of values
+        """
+
+        return self.get_current_two_week_numeric_aggregation_from_given_time(datetime.now(), aggregate, aggregation_key)
+
 
     def get_current_month_numeric_aggregation_from_now(self, aggregate=True, aggregation_key="days"):
         """
