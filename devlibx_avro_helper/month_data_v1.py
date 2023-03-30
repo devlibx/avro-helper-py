@@ -137,7 +137,6 @@ class MonthDataAvroHelperV1:
 
         # Find the keys
         keys = get_keys_for_current_week_for_day_aggregation_from_given_time(time)
-        print(keys)
 
         # Find data with all keys
         result = []
