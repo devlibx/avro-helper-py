@@ -61,6 +61,49 @@ class TestingMonthDataAvroHelperV1(unittest.TestCase):
         print(result)
         self.assertEqual(8, result)
 
+    def test__get_current_week_numeric_aggregation_from_given_time(self):
+        # This is the data you will get from DB or some other place
+        inputDataFromDB = '''
+                      {"updated_at":1663665518937,"days":{"9-5":3,"9-6":1,"9-10":2,"9-11":1,"9-13":1}}
+                      '''
+        helper = MonthDataAvroHelperV1(inputDataFromDB)
+
+        # Check with aggregate=False
+        result = helper.get_current_month_numeric_aggregation_from_given_time(
+            date_time_obj_for_this_test,
+            aggregate=False
+        )
+        self.assertEqual(3, result[0])
+        print(result)
+
+        # Check with aggregate=True
+        result = helper.get_current_week_numeric_aggregation_from_given_time(date_time_obj_for_this_test)
+        print(result)
+        self.assertEqual(3, result)
+
+    def test__get_current_two_week_numeric_aggregation_from_given_time(self):
+        # This is the data you will get from DB or some other place
+        inputDataFromDB = '''
+                      {"updated_at":1663665518937,"days":{"8-20":3,"8-29":1,"9-1":2,"9-4":1,"9-5":1}}
+                      '''
+        helper = MonthDataAvroHelperV1(inputDataFromDB)
+
+        # Check with aggregate=False
+        result = helper.get_current_two_week_numeric_aggregation_from_given_time(
+            date_time_obj_for_this_test,
+            aggregate=False
+        )
+        self.assertEqual(1, result[0])
+        self.assertEqual(2, result[1])
+        self.assertEqual(1, result[2])
+        self.assertEqual(1, result[3])
+        print(result)
+
+        # Check with aggregate=True
+        result = helper.get_current_two_week_numeric_aggregation_from_given_time(date_time_obj_for_this_test)
+        print(result)
+        self.assertEqual(5, result)
+
     def test__get_current_month_numeric_aggregation_from_now(self):
         # This is the data you will get from DB or some other place
         inputDataFromDB = '''
