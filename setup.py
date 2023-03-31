@@ -18,7 +18,7 @@ description = 'Python DSL for setting up Flask app CDC'
 
 setuptools.setup(
     name='avro-helper-devlibx-v1',
-    version="0.2.0",
+    version="0.2.1",
     description='{0}\n\n{1}'.format(description, history),
     long_description_content_type="text/markdown",
     long_description=open("README.md").read(),
