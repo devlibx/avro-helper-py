@@ -11,7 +11,7 @@ def get_keys_for_current_week_for_day_aggregation_from_given_time(time):
     """
     result = []
     end = time
-    start = time.replace(minute=0, hour=0, second=0, microsecond=0) - timedelta(days=time.weekday())
+    start = time.replace(minute=0, hour=0, second=0, microsecond=0)-timedelta(days=time.weekday())
     while start <= end:
         result.append("{}-{}".format(start.month, start.day))
         start = start + timedelta(days=1)
