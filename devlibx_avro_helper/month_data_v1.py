@@ -3,7 +3,7 @@ from datetime import datetime
 from datetime import timedelta
 
 
-def get_keys_for_current_week_for_day_aggregation_from_given_time(time):
+def get_keys_for_current_week_for_day_aggregation_from_given_time(time, week_start):
     """
     Give key week given by time - which are then used to aggregate data
     :param time: week to use
@@ -11,7 +11,9 @@ def get_keys_for_current_week_for_day_aggregation_from_given_time(time):
     """
     result = []
     end = time
-    start = time.replace(minute=0, hour=0, second=0, microsecond=0) - timedelta(days=time.weekday())
+    d_diff = time.weekday()
+    d_diff = d_diff + (7 - week_start) if d_diff < week_start else d_diff - week_start
+    start = time.replace(minute=0, hour=0, second=0, microsecond=0)-timedelta(days=d_diff)
     while start <= end:
         result.append("{}-{}".format(start.month, start.day))
         start = start + timedelta(days=1)
@@ -125,18 +127,19 @@ class MonthDataAvroHelperV1:
 
         print("-------------------------------------- End: Data ----------------------------------------------------")
 
-    def get_current_week_numeric_aggregation_from_given_time(self, time, aggregate=True, aggregation_key="days"):
+    def get_current_week_numeric_aggregation_from_given_time(self, time, week_start=0, aggregate=True, aggregation_key="days"):
         """
         This method will give you data for current week.
 
         :param aggregation_key:  days, days_hour [currently only days is supported]
         :param time: from [start of this week <--> the time given]
         :param aggregate: aggregation or raw values
+        :param week_start: day considered to be the start of the week, default 0 (Monday), range [0, 6]
         :return: if aggregate=True, then single numeric value of the total, otherwise array of values
         """
 
         # Find the keys
-        keys = get_keys_for_current_week_for_day_aggregation_from_given_time(time)
+        keys = get_keys_for_current_week_for_day_aggregation_from_given_time(time, week_start)
 
         # Find data with all keys
         result = []
@@ -156,7 +159,7 @@ class MonthDataAvroHelperV1:
                 sum = sum + i
             return sum
 
-    def get_current_week_numeric_aggregation_from_now(self, aggregate=True, aggregation_key="days"):
+    def get_current_week_numeric_aggregation_from_now(self, week_start=0, aggregate=True, aggregation_key="days"):
         """
         This method will give you data for current week.
 
@@ -165,7 +168,7 @@ class MonthDataAvroHelperV1:
         :return: if aggregate=True, then single numeric value of the total, otherwise array of values
         """
 
-        return self.get_current_week_numeric_aggregation_from_given_time(datetime.now(), aggregate, aggregation_key)
+        return self.get_current_week_numeric_aggregation_from_given_time(datetime.now(), week_start, aggregate, aggregation_key)
 
     def get_current_two_week_numeric_aggregation_from_given_time(self, time, aggregate=True, aggregation_key="days"):
         """
