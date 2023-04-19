@@ -69,7 +69,7 @@ class TestingMonthDataAvroHelperV1(unittest.TestCase):
         helper = MonthDataAvroHelperV1(inputDataFromDB)
 
         # Check with aggregate=False
-        result = helper.get_current_month_numeric_aggregation_from_given_time(
+        result = helper.get_current_week_numeric_aggregation_from_given_time(
             date_time_obj_for_this_test,
             aggregate=False
         )
